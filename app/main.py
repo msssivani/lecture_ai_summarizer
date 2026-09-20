@@ -1,5 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 
+from app.services.file_storage import save_uploaded_lecture
+
 
 app = FastAPI(
     title="Lecture AI",
@@ -10,7 +12,10 @@ app = FastAPI(
 
 @app.post("/lectures/upload")
 async def upload_lecture(file: UploadFile = File(...)):
+    saved_path = save_uploaded_lecture(file)
+
     return {
         "filename": file.filename,
         "content_type": file.content_type,
+        "saved_path": str(saved_path),
     }
